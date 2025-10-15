@@ -27,21 +27,15 @@ final class FilesService implements FilesContract
      *
      * @param string $file the file to upload
      * @param bool $cleanText Whether to clean the extracted text
-     * @param bool $stripBoilerplate Whether to remove boilerplate text
      *
      * @throws APIException
      */
     public function extractText(
         $file,
         $cleanText = omit,
-        $stripBoilerplate = omit,
-        ?RequestOptions $requestOptions = null,
+        ?RequestOptions $requestOptions = null
     ): FileExtractTextResponse {
-        $params = [
-            'file' => $file,
-            'cleanText' => $cleanText,
-            'stripBoilerplate' => $stripBoilerplate,
-        ];
+        $params = ['file' => $file, 'cleanText' => $cleanText];
 
         return $this->extractTextRaw($params, $requestOptions);
     }

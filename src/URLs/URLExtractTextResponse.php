@@ -17,7 +17,6 @@ use CrawlerDev\Core\Conversion\Contracts\ResponseConverter;
  *   finalURL?: string,
  *   sizeBytes?: int,
  *   statusCode?: int,
- *   success?: bool,
  *   textLength?: int,
  *   url?: string,
  * }
@@ -45,9 +44,6 @@ final class URLExtractTextResponse implements BaseModel, ResponseConverter
     public ?int $statusCode;
 
     #[Api(optional: true)]
-    public ?bool $success;
-
-    #[Api(optional: true)]
     public ?int $textLength;
 
     #[Api(optional: true)]
@@ -69,7 +65,6 @@ final class URLExtractTextResponse implements BaseModel, ResponseConverter
         ?string $finalURL = null,
         ?int $sizeBytes = null,
         ?int $statusCode = null,
-        ?bool $success = null,
         ?int $textLength = null,
         ?string $url = null,
     ): self {
@@ -80,7 +75,6 @@ final class URLExtractTextResponse implements BaseModel, ResponseConverter
         null !== $finalURL && $obj->finalURL = $finalURL;
         null !== $sizeBytes && $obj->sizeBytes = $sizeBytes;
         null !== $statusCode && $obj->statusCode = $statusCode;
-        null !== $success && $obj->success = $success;
         null !== $textLength && $obj->textLength = $textLength;
         null !== $url && $obj->url = $url;
 
@@ -123,14 +117,6 @@ final class URLExtractTextResponse implements BaseModel, ResponseConverter
     {
         $obj = clone $this;
         $obj->statusCode = $statusCode;
-
-        return $obj;
-    }
-
-    public function withSuccess(bool $success): self
-    {
-        $obj = clone $this;
-        $obj->success = $success;
 
         return $obj;
     }

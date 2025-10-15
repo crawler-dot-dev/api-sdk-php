@@ -16,7 +16,6 @@ use CrawlerDev\Core\Conversion\Contracts\ResponseConverter;
  *   extractedText?: string,
  *   filename?: string,
  *   sizeBytes?: int,
- *   success?: bool,
  *   textLength?: int,
  * }
  */
@@ -40,9 +39,6 @@ final class FileExtractTextResponse implements BaseModel, ResponseConverter
     public ?int $sizeBytes;
 
     #[Api(optional: true)]
-    public ?bool $success;
-
-    #[Api(optional: true)]
     public ?int $textLength;
 
     public function __construct()
@@ -60,7 +56,6 @@ final class FileExtractTextResponse implements BaseModel, ResponseConverter
         ?string $extractedText = null,
         ?string $filename = null,
         ?int $sizeBytes = null,
-        ?bool $success = null,
         ?int $textLength = null,
     ): self {
         $obj = new self;
@@ -69,7 +64,6 @@ final class FileExtractTextResponse implements BaseModel, ResponseConverter
         null !== $extractedText && $obj->extractedText = $extractedText;
         null !== $filename && $obj->filename = $filename;
         null !== $sizeBytes && $obj->sizeBytes = $sizeBytes;
-        null !== $success && $obj->success = $success;
         null !== $textLength && $obj->textLength = $textLength;
 
         return $obj;
@@ -103,14 +97,6 @@ final class FileExtractTextResponse implements BaseModel, ResponseConverter
     {
         $obj = clone $this;
         $obj->sizeBytes = $sizeBytes;
-
-        return $obj;
-    }
-
-    public function withSuccess(bool $success): self
-    {
-        $obj = clone $this;
-        $obj->success = $success;
 
         return $obj;
     }

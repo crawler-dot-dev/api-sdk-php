@@ -9,6 +9,7 @@ use CrawlerDev\Core\Exceptions\APIException;
 use CrawlerDev\RequestOptions;
 use CrawlerDev\ServiceContracts\URLsContract;
 use CrawlerDev\URLs\URLExtractTextParams;
+use CrawlerDev\URLs\URLExtractTextParams\Proxy;
 use CrawlerDev\URLs\URLExtractTextResponse;
 
 use const CrawlerDev\Core\OMIT as omit;
@@ -27,23 +28,24 @@ final class URLsService implements URLsContract
      *
      * @param string $url the URL to extract text from
      * @param bool $cleanText Whether to clean extracted text
-     * @param bool $renderJs Whether to render JavaScript for HTML content. This parameter is ignored for binary content types (PDF, DOC, etc.) since they are not HTML.
-     * @param bool $stripBoilerplate Whether to remove boilerplate text
+     * @param array<string,
+     * string,> $headers Custom HTTP headers to send with the request (case-insensitive)
+     * @param Proxy $proxy Proxy configuration for the request
      *
      * @throws APIException
      */
     public function extractText(
         $url,
         $cleanText = omit,
-        $renderJs = omit,
-        $stripBoilerplate = omit,
+        $headers = omit,
+        $proxy = omit,
         ?RequestOptions $requestOptions = null,
     ): URLExtractTextResponse {
         $params = [
             'url' => $url,
             'cleanText' => $cleanText,
-            'renderJs' => $renderJs,
-            'stripBoilerplate' => $stripBoilerplate,
+            'headers' => $headers,
+            'proxy' => $proxy,
         ];
 
         return $this->extractTextRaw($params, $requestOptions);
