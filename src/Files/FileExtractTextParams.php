@@ -25,9 +25,7 @@ use CrawlerDev\Core\Contracts\BaseModel;
  *
  * @see CrawlerDev\Files->extractText
  *
- * @phpstan-type file_extract_text_params = array{
- *   file: string, cleanText?: bool, stripBoilerplate?: bool
- * }
+ * @phpstan-type file_extract_text_params = array{file: string, cleanText?: bool}
  */
 final class FileExtractTextParams implements BaseModel
 {
@@ -46,12 +44,6 @@ final class FileExtractTextParams implements BaseModel
      */
     #[Api('clean_text', optional: true)]
     public ?bool $cleanText;
-
-    /**
-     * Whether to remove boilerplate text.
-     */
-    #[Api('strip_boilerplate', optional: true)]
-    public ?bool $stripBoilerplate;
 
     /**
      * `new FileExtractTextParams()` is missing required properties by the API.
@@ -77,17 +69,13 @@ final class FileExtractTextParams implements BaseModel
      *
      * You must use named parameters to construct any parameters with a default value.
      */
-    public static function with(
-        string $file,
-        ?bool $cleanText = null,
-        ?bool $stripBoilerplate = null
-    ): self {
+    public static function with(string $file, ?bool $cleanText = null): self
+    {
         $obj = new self;
 
         $obj->file = $file;
 
         null !== $cleanText && $obj->cleanText = $cleanText;
-        null !== $stripBoilerplate && $obj->stripBoilerplate = $stripBoilerplate;
 
         return $obj;
     }
@@ -110,17 +98,6 @@ final class FileExtractTextParams implements BaseModel
     {
         $obj = clone $this;
         $obj->cleanText = $cleanText;
-
-        return $obj;
-    }
-
-    /**
-     * Whether to remove boilerplate text.
-     */
-    public function withStripBoilerplate(bool $stripBoilerplate): self
-    {
-        $obj = clone $this;
-        $obj->stripBoilerplate = $stripBoilerplate;
 
         return $obj;
     }
