@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.0 (2025-10-15)
+
+Full Changelog: [v0.0.3...v0.1.0](https://github.com/crawler-dot-dev/api-sdk-php/compare/v0.0.3...v0.1.0)
+
+### Features
+
+* **api:** api update ([07aeeae](https://github.com/crawler-dot-dev/api-sdk-php/commit/07aeeae1e631be421185f93211598ac2f07d7b55))
+
+
+### Chores
+
+* add license ([35676e9](https://github.com/crawler-dot-dev/api-sdk-php/commit/35676e9c748afb7b89461448dcdfbe549ebda78b))
+
 ## 0.0.3 (2025-10-09)
 
 Full Changelog: [v0.0.2...v0.0.3](https://github.com/crawler-dot-dev/api-sdk-php/compare/v0.0.2...v0.0.3)
