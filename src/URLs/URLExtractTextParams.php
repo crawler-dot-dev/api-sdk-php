@@ -8,6 +8,7 @@ use CrawlerDev\Core\Attributes\Api;
 use CrawlerDev\Core\Concerns\SdkModel;
 use CrawlerDev\Core\Concerns\SdkParams;
 use CrawlerDev\Core\Contracts\BaseModel;
+use CrawlerDev\URLs\URLExtractTextParams\Proxy;
 
 /**
  * An object containing the method's parameters.
@@ -26,7 +27,7 @@ use CrawlerDev\Core\Contracts\BaseModel;
  * @see CrawlerDev\URLs->extractText
  *
  * @phpstan-type url_extract_text_params = array{
- *   url: string, cleanText?: bool, renderJs?: bool, stripBoilerplate?: bool
+ *   url: string, cleanText?: bool, headers?: array<string, string>, proxy?: Proxy
  * }
  */
 final class URLExtractTextParams implements BaseModel
@@ -48,16 +49,18 @@ final class URLExtractTextParams implements BaseModel
     public ?bool $cleanText;
 
     /**
-     * Whether to render JavaScript for HTML content. This parameter is ignored for binary content types (PDF, DOC, etc.) since they are not HTML.
+     * Custom HTTP headers to send with the request (case-insensitive).
+     *
+     * @var array<string, string>|null $headers
      */
-    #[Api('render_js', optional: true)]
-    public ?bool $renderJs;
+    #[Api(map: 'string', optional: true)]
+    public ?array $headers;
 
     /**
-     * Whether to remove boilerplate text.
+     * Proxy configuration for the request.
      */
-    #[Api('strip_boilerplate', optional: true)]
-    public ?bool $stripBoilerplate;
+    #[Api(optional: true)]
+    public ?Proxy $proxy;
 
     /**
      * `new URLExtractTextParams()` is missing required properties by the API.
@@ -82,20 +85,22 @@ final class URLExtractTextParams implements BaseModel
      * Construct an instance from the required parameters.
      *
      * You must use named parameters to construct any parameters with a default value.
+     *
+     * @param array<string, string> $headers
      */
     public static function with(
         string $url,
         ?bool $cleanText = null,
-        ?bool $renderJs = null,
-        ?bool $stripBoilerplate = null,
+        ?array $headers = null,
+        ?Proxy $proxy = null,
     ): self {
         $obj = new self;
 
         $obj->url = $url;
 
         null !== $cleanText && $obj->cleanText = $cleanText;
-        null !== $renderJs && $obj->renderJs = $renderJs;
-        null !== $stripBoilerplate && $obj->stripBoilerplate = $stripBoilerplate;
+        null !== $headers && $obj->headers = $headers;
+        null !== $proxy && $obj->proxy = $proxy;
 
         return $obj;
     }
@@ -123,23 +128,25 @@ final class URLExtractTextParams implements BaseModel
     }
 
     /**
-     * Whether to render JavaScript for HTML content. This parameter is ignored for binary content types (PDF, DOC, etc.) since they are not HTML.
+     * Custom HTTP headers to send with the request (case-insensitive).
+     *
+     * @param array<string, string> $headers
      */
-    public function withRenderJs(bool $renderJs): self
+    public function withHeaders(array $headers): self
     {
         $obj = clone $this;
-        $obj->renderJs = $renderJs;
+        $obj->headers = $headers;
 
         return $obj;
     }
 
     /**
-     * Whether to remove boilerplate text.
+     * Proxy configuration for the request.
      */
-    public function withStripBoilerplate(bool $stripBoilerplate): self
+    public function withProxy(Proxy $proxy): self
     {
         $obj = clone $this;
-        $obj->stripBoilerplate = $stripBoilerplate;
+        $obj->proxy = $proxy;
 
         return $obj;
     }
