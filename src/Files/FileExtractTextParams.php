@@ -10,18 +10,7 @@ use CrawlerDev\Core\Concerns\SdkParams;
 use CrawlerDev\Core\Contracts\BaseModel;
 
 /**
- * An object containing the method's parameters.
- * Example usage:
- * ```
- * $params = (new FileExtractTextParams); // set properties as needed
- * $client->files->extractText(...$params->toArray());
- * ```
  * Upload a file and extract text content from it. Supports PDF, DOC, DOCX, TXT and other text-extractable document formats.
- *
- * @method toArray()
- *   Returns the parameters as an associative array suitable for passing to the client method.
- *
- *   `$client->files->extractText(...$params->toArray());`
  *
  * @see CrawlerDev\Files->extractText
  *

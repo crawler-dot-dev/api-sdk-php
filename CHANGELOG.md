@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.2.0 (2025-10-22)
+
+Full Changelog: [v0.1.0...v0.2.0](https://github.com/crawler-dot-dev/api-sdk-php/compare/v0.1.0...v0.2.0)
+
+### ⚠ BREAKING CHANGES
+
+* remove confusing `toArray()` alias to `__serialize()` in favour of `toProperties()`
+
+### Features
+
+* remove confusing `toArray()` alias to `__serialize()` in favour of `toProperties()` ([3d0ac66](https://github.com/crawler-dot-dev/api-sdk-php/commit/3d0ac66425ea745fea0df87b579c352ef5b59711))
+
+
+### Bug Fixes
+
+* inverted retry condition ([ce96284](https://github.com/crawler-dot-dev/api-sdk-php/commit/ce96284a91ac5ca0c4a1fa4732d9c8ef4e4f4456))
+
 ## 0.1.0 (2025-10-15)
 
 Full Changelog: [v0.0.3...v0.1.0](https://github.com/crawler-dot-dev/api-sdk-php/compare/v0.0.3...v0.1.0)
