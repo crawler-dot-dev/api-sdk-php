@@ -11,18 +11,7 @@ use CrawlerDev\Core\Contracts\BaseModel;
 use CrawlerDev\URLs\URLExtractTextParams\Proxy;
 
 /**
- * An object containing the method's parameters.
- * Example usage:
- * ```
- * $params = (new URLExtractTextParams); // set properties as needed
- * $client->urls->extractText(...$params->toArray());
- * ```
  * Extract text content from a webpage or document accessible via URL. Supports HTML, PDF, and other web-accessible content types.
- *
- * @method toArray()
- *   Returns the parameters as an associative array suitable for passing to the client method.
- *
- *   `$client->urls->extractText(...$params->toArray());`
  *
  * @see CrawlerDev\URLs->extractText
  *
