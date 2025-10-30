@@ -11,7 +11,7 @@ use CrawlerDev\Core\Contracts\BaseModel;
 use CrawlerDev\Core\Conversion\Contracts\ResponseConverter;
 
 /**
- * @phpstan-type url_extract_text_response = array{
+ * @phpstan-type URLExtractTextResponseShape = array{
  *   contentType?: string,
  *   extractedText?: string,
  *   finalURL?: string,
@@ -23,7 +23,7 @@ use CrawlerDev\Core\Conversion\Contracts\ResponseConverter;
  */
 final class URLExtractTextResponse implements BaseModel, ResponseConverter
 {
-    /** @use SdkModel<url_extract_text_response> */
+    /** @use SdkModel<URLExtractTextResponseShape> */
     use SdkModel;
 
     use SdkResponse;

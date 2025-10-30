@@ -11,13 +11,13 @@ use CrawlerDev\Core\Contracts\BaseModel;
 /**
  * Proxy configuration for the request.
  *
- * @phpstan-type proxy_alias = array{
+ * @phpstan-type ProxyShape = array{
  *   password?: string, server?: string, username?: string
  * }
  */
 final class Proxy implements BaseModel
 {
-    /** @use SdkModel<proxy_alias> */
+    /** @use SdkModel<ProxyShape> */
     use SdkModel;
 
     /**
