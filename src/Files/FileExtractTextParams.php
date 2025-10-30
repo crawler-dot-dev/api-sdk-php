@@ -14,11 +14,11 @@ use CrawlerDev\Core\Contracts\BaseModel;
  *
  * @see CrawlerDev\Files->extractText
  *
- * @phpstan-type file_extract_text_params = array{file: string, cleanText?: bool}
+ * @phpstan-type FileExtractTextParamsShape = array{file: string, cleanText?: bool}
  */
 final class FileExtractTextParams implements BaseModel
 {
-    /** @use SdkModel<file_extract_text_params> */
+    /** @use SdkModel<FileExtractTextParamsShape> */
     use SdkModel;
     use SdkParams;
 

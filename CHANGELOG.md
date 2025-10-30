@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.1 (2025-10-30)
+
+Full Changelog: [v0.2.0...v0.2.1](https://github.com/crawler-dot-dev/api-sdk-php/compare/v0.2.0...v0.2.1)
+
+### Chores
+
+* use pascal case for phpstan typedefs ([c3d1a6b](https://github.com/crawler-dot-dev/api-sdk-php/commit/c3d1a6be25c9fedfd3fc24ddfd8e8d879ef9e56c))
+
 ## 0.2.0 (2025-10-22)
 
 Full Changelog: [v0.1.0...v0.2.0](https://github.com/crawler-dot-dev/api-sdk-php/compare/v0.1.0...v0.2.0)
