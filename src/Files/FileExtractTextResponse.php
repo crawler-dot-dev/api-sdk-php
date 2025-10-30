@@ -11,7 +11,7 @@ use CrawlerDev\Core\Contracts\BaseModel;
 use CrawlerDev\Core\Conversion\Contracts\ResponseConverter;
 
 /**
- * @phpstan-type file_extract_text_response = array{
+ * @phpstan-type FileExtractTextResponseShape = array{
  *   contentType?: string,
  *   extractedText?: string,
  *   filename?: string,
@@ -21,7 +21,7 @@ use CrawlerDev\Core\Conversion\Contracts\ResponseConverter;
  */
 final class FileExtractTextResponse implements BaseModel, ResponseConverter
 {
-    /** @use SdkModel<file_extract_text_response> */
+    /** @use SdkModel<FileExtractTextResponseShape> */
     use SdkModel;
 
     use SdkResponse;

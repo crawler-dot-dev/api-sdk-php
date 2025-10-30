@@ -15,13 +15,13 @@ use CrawlerDev\URLs\URLExtractTextParams\Proxy;
  *
  * @see CrawlerDev\URLs->extractText
  *
- * @phpstan-type url_extract_text_params = array{
+ * @phpstan-type URLExtractTextParamsShape = array{
  *   url: string, cleanText?: bool, headers?: array<string, string>, proxy?: Proxy
  * }
  */
 final class URLExtractTextParams implements BaseModel
 {
-    /** @use SdkModel<url_extract_text_params> */
+    /** @use SdkModel<URLExtractTextParamsShape> */
     use SdkModel;
     use SdkParams;
 
