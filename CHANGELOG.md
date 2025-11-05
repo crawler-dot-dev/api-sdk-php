@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.3.0 (2025-11-05)
+
+Full Changelog: [v0.2.1...v0.3.0](https://github.com/crawler-dot-dev/api-sdk-php/compare/v0.2.1...v0.3.0)
+
+### Features
+
+* **api:** api update ([a2a3ada](https://github.com/crawler-dot-dev/api-sdk-php/commit/a2a3adab01202f1067d37e9257bac0d030cf27a2))
+
+
+### Bug Fixes
+
+* ensure auth methods return non-nullable arrays ([ed61e4d](https://github.com/crawler-dot-dev/api-sdk-php/commit/ed61e4d9caedd2a0ea09b9088fdd0829789f0ac6))
+
+
+### Chores
+
+* **client:** send metadata headers ([1777597](https://github.com/crawler-dot-dev/api-sdk-php/commit/17775975d4915b0d4ddbf6f532ae1ec65ed99b7e))
+
 ## 0.2.1 (2025-10-30)
 
 Full Changelog: [v0.2.0...v0.2.1](https://github.com/crawler-dot-dev/api-sdk-php/compare/v0.2.0...v0.2.1)
