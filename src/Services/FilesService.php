@@ -26,7 +26,13 @@ final class FilesService implements FilesContract
      * Upload a file and extract text content from it. Supports PDF, DOC, DOCX, TXT and other text-extractable document formats.
      *
      * @param string $file the file to upload
-     * @param bool $cleanText Whether to clean the extracted text
+     * @param bool $cleanText Whether to clean and normalize the extracted text. When enabled (true):
+     * - For HTML content: Removes script, style, and other non-text elements before extraction
+     * - Normalizes whitespace (collapses multiple spaces/tabs, normalizes newlines)
+     * - Removes empty lines and trims leading/trailing whitespace
+     * - Normalizes Unicode characters (NFC)
+     * - For JSON content: Only minimal cleaning to preserve structure
+     * When disabled (false): Returns raw extracted text without any processing.
      *
      * @throws APIException
      */
