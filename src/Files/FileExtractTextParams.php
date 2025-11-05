@@ -29,7 +29,13 @@ final class FileExtractTextParams implements BaseModel
     public string $file;
 
     /**
-     * Whether to clean the extracted text.
+     * Whether to clean and normalize the extracted text. When enabled (true):
+     * - For HTML content: Removes script, style, and other non-text elements before extraction
+     * - Normalizes whitespace (collapses multiple spaces/tabs, normalizes newlines)
+     * - Removes empty lines and trims leading/trailing whitespace
+     * - Normalizes Unicode characters (NFC)
+     * - For JSON content: Only minimal cleaning to preserve structure
+     * When disabled (false): Returns raw extracted text without any processing.
      */
     #[Api('clean_text', optional: true)]
     public ?bool $cleanText;
@@ -81,7 +87,13 @@ final class FileExtractTextParams implements BaseModel
     }
 
     /**
-     * Whether to clean the extracted text.
+     * Whether to clean and normalize the extracted text. When enabled (true):
+     * - For HTML content: Removes script, style, and other non-text elements before extraction
+     * - Normalizes whitespace (collapses multiple spaces/tabs, normalizes newlines)
+     * - Removes empty lines and trims leading/trailing whitespace
+     * - Normalizes Unicode characters (NFC)
+     * - For JSON content: Only minimal cleaning to preserve structure
+     * When disabled (false): Returns raw extracted text without any processing.
      */
     public function withCleanText(bool $cleanText): self
     {
