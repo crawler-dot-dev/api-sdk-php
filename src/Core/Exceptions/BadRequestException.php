@@ -1,9 +1,9 @@
 <?php
 
-namespace CrawlerDev\Core\Exceptions;
+namespace APICrawlerDevSDKs\Core\Exceptions;
 
 class BadRequestException extends APIStatusException
 {
     /** @var string */
-    protected const DESC = 'CrawlerDev Bad Request Exception';
+    protected const DESC = 'APICrawlerDevSDKs Bad Request Exception';
 }

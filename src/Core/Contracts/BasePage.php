@@ -2,18 +2,12 @@
 
 declare(strict_types=1);
 
-namespace CrawlerDev\Core\Contracts;
-
-use CrawlerDev\Client;
-use CrawlerDev\Core\Conversion\Contracts\Converter;
-use CrawlerDev\Core\Conversion\Contracts\ConverterSource;
-use CrawlerDev\RequestOptions;
-use Psr\Http\Message\ResponseInterface;
+namespace APICrawlerDevSDKs\Core\Contracts;
 
 /**
- * @internal
+ * @phpstan-import-type NormalizedRequest from \APICrawlerDevSDKs\Core\BaseClient
  *
- * @phpstan-import-type normalized_request from \CrawlerDev\Core\BaseClient
+ * @internal
  *
  * @template Item
  *
@@ -21,19 +15,6 @@ use Psr\Http\Message\ResponseInterface;
  */
 interface BasePage extends \IteratorAggregate
 {
-    /**
-     * @internal
-     *
-     * @param normalized_request $request
-     */
-    public function __construct(
-        Converter|ConverterSource|string $convert,
-        Client $client,
-        array $request,
-        RequestOptions $options,
-        ResponseInterface $response,
-    );
-
     public function hasNextPage(): bool;
 
     /**

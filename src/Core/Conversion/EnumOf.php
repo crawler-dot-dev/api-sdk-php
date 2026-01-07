@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace CrawlerDev\Core\Conversion;
+namespace APICrawlerDevSDKs\Core\Conversion;
 
-use CrawlerDev\Core\Conversion;
-use CrawlerDev\Core\Conversion\Contracts\Converter;
+use APICrawlerDevSDKs\Core\Conversion;
+use APICrawlerDevSDKs\Core\Conversion\Contracts\Converter;
 
 /**
  * @internal
@@ -28,6 +28,20 @@ final class EnumOf implements Converter
 
     public function coerce(mixed $value, CoerceState $state): mixed
     {
+        $this->tally($value, state: $state);
+
+        return $value;
+    }
+
+    public function dump(mixed $value, DumpState $state): mixed
+    {
+        $this->tally($value, state: $state);
+
+        return Conversion::dump_unknown($value, state: $state);
+    }
+
+    private function tally(mixed $value, CoerceState|DumpState $state): void
+    {
         if (in_array($value, haystack: $this->members, strict: true)) {
             ++$state->yes;
         } elseif ($this->type === gettype($value)) {
@@ -35,12 +49,5 @@ final class EnumOf implements Converter
         } else {
             ++$state->no;
         }
-
-        return $value;
-    }
-
-    public function dump(mixed $value, DumpState $state): mixed
-    {
-        return Conversion::dump_unknown($value, state: $state);
     }
 }

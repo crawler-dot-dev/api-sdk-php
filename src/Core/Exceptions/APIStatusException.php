@@ -1,15 +1,15 @@
 <?php
 
-namespace CrawlerDev\Core\Exceptions;
+namespace APICrawlerDevSDKs\Core\Exceptions;
 
-use CrawlerDev\Core\Util;
+use APICrawlerDevSDKs\Core\Util;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class APIStatusException extends APIException
 {
     /** @var string */
-    protected const DESC = 'CrawlerDev API Status Error';
+    protected const DESC = 'APICrawlerDevSDKs API Status Error';
 
     public ?int $status;
 

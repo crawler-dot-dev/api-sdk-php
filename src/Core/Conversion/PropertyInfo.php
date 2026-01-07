@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace CrawlerDev\Core\Conversion;
+namespace APICrawlerDevSDKs\Core\Conversion;
 
-use CrawlerDev\Core\Attributes\Api;
-use CrawlerDev\Core\Conversion\Contracts\Converter;
-use CrawlerDev\Core\Conversion\Contracts\ConverterSource;
+use APICrawlerDevSDKs\Core\Attributes\Optional;
+use APICrawlerDevSDKs\Core\Attributes\Required;
+use APICrawlerDevSDKs\Core\Conversion\Contracts\Converter;
+use APICrawlerDevSDKs\Core\Conversion\Contracts\ConverterSource;
 
 /**
  * @internal
@@ -28,9 +29,10 @@ final class PropertyInfo
         $apiName = $property->getName();
         $type = $property->getType();
         $optional = false;
+        $attributes = [...$property->getAttributes(Required::class), ...$property->getAttributes(Optional::class)];
 
-        foreach ($property->getAttributes(Api::class) as $attr) {
-            /** @var Api $attribute */
+        foreach ($attributes as $attr) {
+            /** @var Required $attribute */
             $attribute = $attr->newInstance();
 
             $apiName = $attribute->apiName ?? $apiName;
@@ -55,11 +57,12 @@ final class PropertyInfo
         }
 
         if (is_array($type)) {
-            return new UnionOf($type); // @phpstan-ignore-line
+            // @phpstan-ignore-next-line return.type
+            return new UnionOf($type);
         }
 
         if ($type instanceof \ReflectionUnionType) {
-            // @phpstan-ignore-next-line
+            // @phpstan-ignore-next-line argument.type
             return new UnionOf(array_map(static fn ($t) => self::parse($t), array: $type->getTypes()));
         }
 
