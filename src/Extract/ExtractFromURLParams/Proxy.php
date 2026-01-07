@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace CrawlerDev\URLs\URLExtractTextParams;
+namespace APICrawlerDevSDKs\Extract\ExtractFromURLParams;
 
-use CrawlerDev\Core\Attributes\Api;
-use CrawlerDev\Core\Concerns\SdkModel;
-use CrawlerDev\Core\Contracts\BaseModel;
+use APICrawlerDevSDKs\Core\Attributes\Optional;
+use APICrawlerDevSDKs\Core\Concerns\SdkModel;
+use APICrawlerDevSDKs\Core\Contracts\BaseModel;
 
 /**
  * Proxy configuration for the request.
  *
  * @phpstan-type ProxyShape = array{
- *   password?: string, server?: string, username?: string
+ *   password?: string|null, server?: string|null, username?: string|null
  * }
  */
 final class Proxy implements BaseModel
@@ -23,19 +23,19 @@ final class Proxy implements BaseModel
     /**
      * Proxy password for authentication.
      */
-    #[Api(optional: true)]
+    #[Optional]
     public ?string $password;
 
     /**
      * Proxy server URL (e.g., http://proxy.example.com:8080 or socks5://proxy.example.com:1080).
      */
-    #[Api(optional: true)]
+    #[Optional]
     public ?string $server;
 
     /**
      * Proxy username for authentication.
      */
-    #[Api(optional: true)]
+    #[Optional]
     public ?string $username;
 
     public function __construct()
@@ -53,13 +53,13 @@ final class Proxy implements BaseModel
         ?string $server = null,
         ?string $username = null
     ): self {
-        $obj = new self;
+        $self = new self;
 
-        null !== $password && $obj->password = $password;
-        null !== $server && $obj->server = $server;
-        null !== $username && $obj->username = $username;
+        null !== $password && $self['password'] = $password;
+        null !== $server && $self['server'] = $server;
+        null !== $username && $self['username'] = $username;
 
-        return $obj;
+        return $self;
     }
 
     /**
@@ -67,10 +67,10 @@ final class Proxy implements BaseModel
      */
     public function withPassword(string $password): self
     {
-        $obj = clone $this;
-        $obj->password = $password;
+        $self = clone $this;
+        $self['password'] = $password;
 
-        return $obj;
+        return $self;
     }
 
     /**
@@ -78,10 +78,10 @@ final class Proxy implements BaseModel
      */
     public function withServer(string $server): self
     {
-        $obj = clone $this;
-        $obj->server = $server;
+        $self = clone $this;
+        $self['server'] = $server;
 
-        return $obj;
+        return $self;
     }
 
     /**
@@ -89,9 +89,9 @@ final class Proxy implements BaseModel
      */
     public function withUsername(string $username): self
     {
-        $obj = clone $this;
-        $obj->username = $username;
+        $self = clone $this;
+        $self['username'] = $username;
 
-        return $obj;
+        return $self;
     }
 }

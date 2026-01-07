@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace CrawlerDev\Core\Conversion\Concerns;
+namespace APICrawlerDevSDKs\Core\Conversion\Concerns;
 
-use CrawlerDev\Core\Conversion;
-use CrawlerDev\Core\Conversion\CoerceState;
-use CrawlerDev\Core\Conversion\Contracts\Converter;
-use CrawlerDev\Core\Conversion\Contracts\ConverterSource;
-use CrawlerDev\Core\Conversion\DumpState;
+use APICrawlerDevSDKs\Core\Conversion;
+use APICrawlerDevSDKs\Core\Conversion\CoerceState;
+use APICrawlerDevSDKs\Core\Conversion\Contracts\Converter;
+use APICrawlerDevSDKs\Core\Conversion\Contracts\ConverterSource;
+use APICrawlerDevSDKs\Core\Conversion\DumpState;
 
 /**
  * @internal
@@ -32,10 +32,11 @@ trait ArrayOf
         if (!is_array($value)) {
             return $value;
         }
+        ++$state->yes;
 
         $acc = [];
         foreach ($value as $k => $v) {
-            if ($this->nullable && null === $v) {
+            if ($this->nullable && is_null($v)) {
                 ++$state->yes;
                 $acc[$k] = null;
             } else {
@@ -51,15 +52,27 @@ trait ArrayOf
         if (!is_array($value)) {
             return Conversion::dump_unknown($value, state: $state);
         }
+        ++$state->yes;
 
         if (empty($value)) {
             return $this->empty();
         }
 
-        return array_map(fn ($v) => Conversion::dump($this->type, value: $v, state: $state), array: $value);
+        $acc = [];
+        foreach ($value as $k => $v) {
+            if ($this->nullable && is_null($v)) {
+                ++$state->yes;
+                $acc[$k] = null;
+            } else {
+                $acc[$k] = Conversion::dump($this->type, value: $v, state: $state);
+            }
+        }
+
+        return $acc;
     }
 
-    private function empty(): array|object // @phpstan-ignore-line
+    // @phpstan-ignore-next-line missingType.iterableValue
+    private function empty(): array|object
     {
         return (object) [];
     }

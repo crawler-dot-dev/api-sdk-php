@@ -1,13 +1,13 @@
-# Crawler Dev PHP API library
+# API Crawler Dev SDKs PHP API library
 
 > [!NOTE]
-> The Crawler Dev PHP API Library is currently in **beta** and we're excited for you to experiment with it!
+> The API Crawler Dev SDKs PHP API Library is currently in **beta** and we're excited for you to experiment with it!
 >
 > This library has not yet been exhaustively tested in production environments and may be missing some features you'd expect in a stable release. As we continue development, there may be breaking changes that require updates to your code.
 >
-> **We'd love your feedback!** Please share any suggestions, bug reports, feature requests, or general thoughts by [filing an issue](https://www.github.com/crawler-dot-dev/api-sdk-php/issues/new).
+> **We'd love your feedback!** Please share any suggestions, bug reports, feature requests, or general thoughts by [filing an issue](https://www.github.com/stainless-sdks/api.crawler.dev-sdks-php/issues/new).
 
-The Crawler Dev PHP library provides convenient access to the Crawler Dev REST API from any PHP 8.1.0+ application.
+The API Crawler Dev SDKs PHP library provides convenient access to the API Crawler Dev SDKs REST API from any PHP 8.1.0+ application.
 
 It is generated with [Stainless](https://www.stainless.com/).
 
@@ -17,23 +17,19 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 To use this package, install via Composer by adding the following to your application's `composer.json`:
 
-<!-- x-release-please-start-version -->
-
 ```json
 {
   "repositories": [
     {
       "type": "vcs",
-      "url": "git@github.com:crawler-dot-dev/api-sdk-php.git"
+      "url": "git@github.com:stainless-sdks/api.crawler.dev-sdks-php.git"
     }
   ],
   "require": {
-    "org-placeholder/crawler-dev": "dev-main"
+    "org-placeholder/api-crawler-dev-sdks": "dev-main"
   }
 }
 ```
-
-<!-- x-release-please-end -->
 
 ## Usage
 
@@ -43,11 +39,13 @@ Parameters with a default value must be set by name.
 ```php
 <?php
 
-use CrawlerDev\Client;
+use APICrawlerDevSDKs\Client;
 
-$client = new Client(apiKey: getenv("CRAWLER_DEV_API_KEY") ?: "My API Key");
+$client = new Client(
+  apiKey: getenv('API_CRAWLER_DEV_SDKS_API_KEY') ?: 'My API Key'
+);
 
-$response = $client->files->extractText(file: 'file');
+$response = $client->extract->fromFile(file: 'file');
 
 var_dump($response->contentType);
 ```
@@ -61,19 +59,19 @@ However, builders are also provided `(new Dog)->withName("Joey")`.
 
 ### Handling errors
 
-When the library is unable to connect to the API, or if the API returns a non-success status code (i.e., 4xx or 5xx response), a subclass of `CrawlerDev\Core\Exceptions\APIException` will be thrown:
+When the library is unable to connect to the API, or if the API returns a non-success status code (i.e., 4xx or 5xx response), a subclass of `APICrawlerDevSDKs\Core\Exceptions\APIException` will be thrown:
 
 ```php
 <?php
 
-use CrawlerDev\Core\Exceptions\APIConnectionException;
+use APICrawlerDevSDKs\Core\Exceptions\APIConnectionException;
 
 try {
-  $response = $client->files->extractText(file: 'file');
+  $response = $client->extract->fromFile(file: 'file');
 } catch (APIConnectionException $e) {
   echo "The server could not be reached", PHP_EOL;
   var_dump($e->getPrevious());
-} catch (RateLimitError $_) {
+} catch (RateLimitError $e) {
   echo "A 429 status code was received; we should back off a bit.", PHP_EOL;
 } catch (APIStatusError $e) {
   echo "Another non-200-range status code was received", PHP_EOL;
@@ -108,14 +106,14 @@ You can use the `maxRetries` option to configure or disable this:
 ```php
 <?php
 
-use CrawlerDev\Client;
-use CrawlerDev\RequestOptions;
+use APICrawlerDevSDKs\Client;
+use APICrawlerDevSDKs\RequestOptions;
 
 // Configure the default for all requests:
 $client = new Client(maxRetries: 0);
 
 // Or, configure per-request:
-$result = $client->files->extractText(
+$result = $client->extract->fromFile(
   file: 'file', requestOptions: RequestOptions::with(maxRetries: 5)
 );
 ```
@@ -133,18 +131,16 @@ Note: the `extra*` parameters of the same name overrides the documented paramete
 ```php
 <?php
 
-use CrawlerDev\RequestOptions;
+use APICrawlerDevSDKs\RequestOptions;
 
-$response = $client->files->extractText(
+$response = $client->extract->fromFile(
   file: 'file',
   requestOptions: RequestOptions::with(
-    extraQueryParams: ["my_query_parameter" => "value"],
-    extraBodyParams: ["my_body_parameter" => "value"],
-    extraHeaders: ["my-header" => "value"],
+    extraQueryParams: ['my_query_parameter' => 'value'],
+    extraBodyParams: ['my_body_parameter' => 'value'],
+    extraHeaders: ['my-header' => 'value'],
   ),
 );
-
-var_dump($response["my_undocumented_property"]);
 ```
 
 #### Undocumented request params
@@ -179,4 +175,4 @@ PHP 8.1.0 or higher.
 
 ## Contributing
 
-See [the contributing documentation](https://github.com/crawler-dot-dev/api-sdk-php/tree/main/CONTRIBUTING.md).
+See [the contributing documentation](https://github.com/stainless-sdks/api.crawler.dev-sdks-php/tree/main/CONTRIBUTING.md).

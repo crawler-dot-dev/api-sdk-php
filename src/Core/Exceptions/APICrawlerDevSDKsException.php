@@ -1,11 +1,11 @@
 <?php
 
-namespace CrawlerDev\Core\Exceptions;
+namespace APICrawlerDevSDKs\Core\Exceptions;
 
-class CrawlerDevException extends \Exception
+class APICrawlerDevSDKsException extends \Exception
 {
     /** @var string */
-    protected const DESC = 'CrawlerDev Error';
+    protected const DESC = 'APICrawlerDevSDKs Error';
 
     public function __construct(string $message, int $code = 0, ?\Throwable $previous = null)
     {

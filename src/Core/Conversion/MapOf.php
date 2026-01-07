@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace CrawlerDev\Core\Conversion;
+namespace APICrawlerDevSDKs\Core\Conversion;
 
-use CrawlerDev\Core\Conversion\Concerns\ArrayOf;
-use CrawlerDev\Core\Conversion\Contracts\Converter;
+use APICrawlerDevSDKs\Core\Conversion\Concerns\ArrayOf;
+use APICrawlerDevSDKs\Core\Conversion\Contracts\Converter;
 
 /**
  * @internal
