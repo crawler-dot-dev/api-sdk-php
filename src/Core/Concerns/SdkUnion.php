@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace CrawlerDev\Core\Concerns;
+namespace APICrawlerDevSDKs\Core\Concerns;
 
-use CrawlerDev\Core\Conversion\Contracts\Converter;
-use CrawlerDev\Core\Conversion\Contracts\ConverterSource;
-use CrawlerDev\Core\Conversion\UnionOf;
+use APICrawlerDevSDKs\Core\Conversion\Contracts\Converter;
+use APICrawlerDevSDKs\Core\Conversion\Contracts\ConverterSource;
+use APICrawlerDevSDKs\Core\Conversion\UnionOf;
 
 /**
  * @internal
@@ -15,7 +15,7 @@ trait SdkUnion
 {
     private static Converter $converter;
 
-    public static function discriminator(): ?string // @phpstan-ignore-line
+    public static function discriminator(): ?string
     {
         return null;
     }
@@ -34,7 +34,6 @@ trait SdkUnion
             return static::$converter;
         }
 
-        // @phpstan-ignore-next-line
         return static::$converter = new UnionOf(discriminator: static::discriminator(), variants: static::variants());
     }
 }

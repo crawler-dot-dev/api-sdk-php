@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace CrawlerDev\Core\Contracts;
+namespace APICrawlerDevSDKs\Core\Contracts;
 
-use CrawlerDev\Core\Conversion\Contracts\Converter;
-use CrawlerDev\Core\Conversion\Contracts\ConverterSource;
+use APICrawlerDevSDKs\Core\Conversion\Contracts\Converter;
+use APICrawlerDevSDKs\Core\Conversion\Contracts\ConverterSource;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -22,6 +22,7 @@ interface BaseStream extends \IteratorAggregate
         Converter|ConverterSource|string $convert,
         RequestInterface $request,
         ResponseInterface $response,
+        mixed $parsedBody,
     );
 
     /**

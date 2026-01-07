@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CrawlerDev\Core\Implementation;
+namespace APICrawlerDevSDKs\Core\Implementation;
 
 /**
  * @internal
