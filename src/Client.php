@@ -31,9 +31,11 @@ class Client extends BaseClient
         ?string $baseUrl = null,
         RequestOptions|array|null $requestOptions = null,
     ) {
-        $this->apiKey = (string) ($apiKey ?? getenv('API_CRAWLER_DEV_SDKS_API_KEY'));
+        $this->apiKey = (string) ($apiKey ?? Util::getenv(
+            'API_CRAWLER_DEV_SDKS_API_KEY'
+        ));
 
-        $baseUrl ??= getenv(
+        $baseUrl ??= Util::getenv(
             'API_CRAWLER_DEV_SDKS_BASE_URL'
         ) ?: 'https://api.crawler.dev';
 
