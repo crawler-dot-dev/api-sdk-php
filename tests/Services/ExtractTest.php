@@ -33,7 +33,7 @@ final class ExtractTest extends TestCase
     public function testFromFile(): void
     {
         if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Prism tests are disabled');
+            $this->markTestSkipped('Mock server tests are disabled');
         }
 
         $result = $this->client->extract->fromFile(file: 'file');
@@ -46,7 +46,7 @@ final class ExtractTest extends TestCase
     public function testFromFileWithOptionalParams(): void
     {
         if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Prism tests are disabled');
+            $this->markTestSkipped('Mock server tests are disabled');
         }
 
         $result = $this->client->extract->fromFile(
@@ -64,7 +64,7 @@ final class ExtractTest extends TestCase
     public function testFromURL(): void
     {
         if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Prism tests are disabled');
+            $this->markTestSkipped('Mock server tests are disabled');
         }
 
         $result = $this->client->extract->fromURL(url: 'url');
@@ -77,7 +77,7 @@ final class ExtractTest extends TestCase
     public function testFromURLWithOptionalParams(): void
     {
         if (UnsupportedMockTests::$skip) {
-            $this->markTestSkipped('Prism tests are disabled');
+            $this->markTestSkipped('Mock server tests are disabled');
         }
 
         $result = $this->client->extract->fromURL(
