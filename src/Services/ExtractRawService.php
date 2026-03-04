@@ -17,6 +17,8 @@ use APICrawlerDevSDKs\RequestOptions;
 use APICrawlerDevSDKs\ServiceContracts\ExtractRawContract;
 
 /**
+ * Endpoints for extracting text from files and URLs.
+ *
  * @phpstan-import-type MaxTimeoutShape from \APICrawlerDevSDKs\Extract\ExtractFromFileParams\MaxTimeout
  * @phpstan-import-type CacheAgeShape from \APICrawlerDevSDKs\Extract\ExtractFromURLParams\CacheAge
  * @phpstan-import-type MaxSizeShape from \APICrawlerDevSDKs\Extract\ExtractFromURLParams\MaxSize
