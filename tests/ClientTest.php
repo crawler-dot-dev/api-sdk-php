@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use APICrawlerDevSDKs\Core\FileParam;
 use APICrawlerDevSDKs\Core\Util;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Mock\Client;
@@ -32,7 +33,9 @@ class ClientTest extends TestCase
             requestOptions: ['transporter' => $transporter],
         );
 
-        $client->extract->fromFile(file: 'file');
+        $client->extract->fromFile(
+            file: FileParam::fromString('Example data', filename: uniqid('file-upload-', true)),
+        );
 
         $this->assertNotFalse($requested = $transporter->getRequests()[0] ?? false);
 

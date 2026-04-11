@@ -3,6 +3,7 @@
 namespace Tests\Services;
 
 use APICrawlerDevSDKs\Client;
+use APICrawlerDevSDKs\Core\FileParam;
 use APICrawlerDevSDKs\Core\Util;
 use APICrawlerDevSDKs\Extract\ExtractFromFileResponse;
 use APICrawlerDevSDKs\Extract\ExtractFromURLResponse;
@@ -36,7 +37,9 @@ final class ExtractTest extends TestCase
             $this->markTestSkipped('Mock server tests are disabled');
         }
 
-        $result = $this->client->extract->fromFile(file: 'file');
+        $result = $this->client->extract->fromFile(
+            file: FileParam::fromString('Example data', filename: uniqid('file-upload-', true)),
+        );
 
         // @phpstan-ignore-next-line method.alreadyNarrowedType
         $this->assertInstanceOf(ExtractFromFileResponse::class, $result);
@@ -50,7 +53,7 @@ final class ExtractTest extends TestCase
         }
 
         $result = $this->client->extract->fromFile(
-            file: 'file',
+            file: FileParam::fromString('Example data', filename: uniqid('file-upload-', true)),
             cleanText: true,
             formats: ['text', 'markdown'],
             maxTimeout: '30s',
