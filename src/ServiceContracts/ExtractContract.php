@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace APICrawlerDevSDKs\ServiceContracts;
 
 use APICrawlerDevSDKs\Core\Exceptions\APIException;
+use APICrawlerDevSDKs\Core\FileParam;
 use APICrawlerDevSDKs\Extract\ExtractFromFileParams\Format;
 use APICrawlerDevSDKs\Extract\ExtractFromFileResponse;
 use APICrawlerDevSDKs\Extract\ExtractFromURLParams\Proxy;
@@ -24,7 +25,7 @@ interface ExtractContract
     /**
      * @api
      *
-     * @param string $file the file to upload
+     * @param string|FileParam $file the file to upload
      * @param bool $cleanText Whether to clean and normalize the extracted text. When enabled (true):
      * - For HTML content: Removes script, style, and other non-text elements before extraction
      * - Normalizes whitespace (collapses multiple spaces/tabs, normalizes newlines)
@@ -47,7 +48,7 @@ interface ExtractContract
      * @throws APIException
      */
     public function fromFile(
-        string $file,
+        string|FileParam $file,
         bool $cleanText = true,
         array $formats = ['text'],
         int|string|null $maxTimeout = null,

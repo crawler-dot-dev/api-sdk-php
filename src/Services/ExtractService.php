@@ -6,6 +6,7 @@ namespace APICrawlerDevSDKs\Services;
 
 use APICrawlerDevSDKs\Client;
 use APICrawlerDevSDKs\Core\Exceptions\APIException;
+use APICrawlerDevSDKs\Core\FileParam;
 use APICrawlerDevSDKs\Core\Util;
 use APICrawlerDevSDKs\Extract\ExtractFromFileParams\Format;
 use APICrawlerDevSDKs\Extract\ExtractFromFileResponse;
@@ -44,7 +45,7 @@ final class ExtractService implements ExtractContract
      *
      * Upload a file and extract text content from it. Supports PDF, DOC, DOCX, TXT and other text-extractable document formats.
      *
-     * @param string $file the file to upload
+     * @param string|FileParam $file the file to upload
      * @param bool $cleanText Whether to clean and normalize the extracted text. When enabled (true):
      * - For HTML content: Removes script, style, and other non-text elements before extraction
      * - Normalizes whitespace (collapses multiple spaces/tabs, normalizes newlines)
@@ -67,7 +68,7 @@ final class ExtractService implements ExtractContract
      * @throws APIException
      */
     public function fromFile(
-        string $file,
+        string|FileParam $file,
         bool $cleanText = true,
         array $formats = ['text'],
         int|string|null $maxTimeout = null,

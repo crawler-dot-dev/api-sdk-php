@@ -37,12 +37,15 @@ Parameters with a default value must be set by name.
 <?php
 
 use APICrawlerDevSDKs\Client;
+use APICrawlerDevSDKs\Core\FileParam;
 
 $client = new Client(
   apiKey: getenv('API_CRAWLER_DEV_SDKS_API_KEY') ?: 'My API Key'
 );
 
-$response = $client->extract->fromFile(file: 'file');
+$response = $client->extract->fromFile(
+  file: FileParam::fromString('REPLACE_ME', filename: uniqid('file-upload-', true)),
+);
 
 var_dump($response->contentType);
 ```
@@ -61,12 +64,15 @@ When the library is unable to connect to the API, or if the API returns a non-su
 ```php
 <?php
 
+use APICrawlerDevSDKs\Core\FileParam;
 use APICrawlerDevSDKs\Core\Exceptions\APIConnectionException;
 use APICrawlerDevSDKs\Core\Exceptions\RateLimitException;
 use APICrawlerDevSDKs\Core\Exceptions\APIStatusException;
 
 try {
-  $response = $client->extract->fromFile(file: 'file');
+  $response = $client->extract->fromFile(
+    file: FileParam::fromString('REPLACE_ME', filename: uniqid('file-upload-', true)),
+  );
 } catch (APIConnectionException $e) {
   echo "The server could not be reached", PHP_EOL;
   var_dump($e->getPrevious());
@@ -106,14 +112,46 @@ You can use the `maxRetries` option to configure or disable this:
 <?php
 
 use APICrawlerDevSDKs\Client;
+use APICrawlerDevSDKs\Core\FileParam;
 
 // Configure the default for all requests:
 $client = new Client(requestOptions: ['maxRetries' => 0]);
 
 // Or, configure per-request:
 $result = $client->extract->fromFile(
-  file: 'file', requestOptions: ['maxRetries' => 5]
+  file: FileParam::fromString('REPLACE_ME', filename: uniqid('file-upload-', true)),
+  requestOptions: ['maxRetries' => 5],
 );
+```
+
+### File uploads
+
+Request parameters that correspond to file uploads can be passed as a resource returned by `fopen()`, a string of file contents, or a `FileParam` instance.
+
+```php
+<?php
+
+use APICrawlerDevSDKs\Core\FileParam;
+
+// Pass a string with filename and content type:
+$contents = file_get_contents('/path/to/file');
+// Pass a string with filename and content type:
+$response = $client->extract->fromFile(
+  file: FileParam::fromString($contents, filename: '/path/to/file', contentType: '…'),
+);
+
+// Pass in only a string (where applicable)
+$response = $client->extract->fromFile(file: '…');
+
+// Pass an open resource:
+$fd = fopen('/path/to/file', 'r');
+try {
+  $response = $client->extract->fromFile(
+    file: FileParam::fromResource($fd, filename: '/path/to/file', contentType: '…'),
+  );
+} finally {
+  fclose($fd);
+}
 ```
 
 ## Advanced concepts
@@ -129,8 +167,10 @@ Note: the `extra*` parameters of the same name overrides the documented paramete
 ```php
 <?php
 
+use APICrawlerDevSDKs\Core\FileParam;
+
 $response = $client->extract->fromFile(
-  file: 'file',
+  file: FileParam::fromString('REPLACE_ME', filename: uniqid('file-upload-', true)),
   requestOptions: [
     'extraQueryParams' => ['my_query_parameter' => 'value'],
     'extraBodyParams' => ['my_body_parameter' => 'value'],

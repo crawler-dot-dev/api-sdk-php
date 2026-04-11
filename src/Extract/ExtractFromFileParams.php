@@ -9,6 +9,7 @@ use APICrawlerDevSDKs\Core\Attributes\Required;
 use APICrawlerDevSDKs\Core\Concerns\SdkModel;
 use APICrawlerDevSDKs\Core\Concerns\SdkParams;
 use APICrawlerDevSDKs\Core\Contracts\BaseModel;
+use APICrawlerDevSDKs\Core\FileParam;
 use APICrawlerDevSDKs\Extract\ExtractFromFileParams\Format;
 
 /**
@@ -20,7 +21,7 @@ use APICrawlerDevSDKs\Extract\ExtractFromFileParams\Format;
  * @phpstan-import-type MaxTimeoutShape from \APICrawlerDevSDKs\Extract\ExtractFromFileParams\MaxTimeout
  *
  * @phpstan-type ExtractFromFileParamsShape = array{
- *   file: string,
+ *   file: string|FileParam,
  *   cleanText?: bool|null,
  *   formats?: list<Format|value-of<Format>>|null,
  *   maxTimeout?: MaxTimeoutShape|null,
@@ -102,7 +103,7 @@ final class ExtractFromFileParams implements BaseModel
      * @param MaxTimeoutShape|null $maxTimeout
      */
     public static function with(
-        string $file,
+        string|FileParam $file,
         ?bool $cleanText = null,
         ?array $formats = null,
         int|string|null $maxTimeout = null,
@@ -121,7 +122,7 @@ final class ExtractFromFileParams implements BaseModel
     /**
      * The file to upload.
      */
-    public function withFile(string $file): self
+    public function withFile(string|FileParam $file): self
     {
         $self = clone $this;
         $self['file'] = $file;
