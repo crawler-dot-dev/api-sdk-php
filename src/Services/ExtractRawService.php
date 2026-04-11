@@ -7,6 +7,7 @@ namespace APICrawlerDevSDKs\Services;
 use APICrawlerDevSDKs\Client;
 use APICrawlerDevSDKs\Core\Contracts\BaseResponse;
 use APICrawlerDevSDKs\Core\Exceptions\APIException;
+use APICrawlerDevSDKs\Core\FileParam;
 use APICrawlerDevSDKs\Extract\ExtractFromFileParams;
 use APICrawlerDevSDKs\Extract\ExtractFromFileParams\Format;
 use APICrawlerDevSDKs\Extract\ExtractFromFileResponse;
@@ -40,7 +41,7 @@ final class ExtractRawService implements ExtractRawContract
      * Upload a file and extract text content from it. Supports PDF, DOC, DOCX, TXT and other text-extractable document formats.
      *
      * @param array{
-     *   file: string,
+     *   file: string|FileParam,
      *   cleanText?: bool,
      *   formats?: list<Format|value-of<Format>>,
      *   maxTimeout?: MaxTimeoutShape,
