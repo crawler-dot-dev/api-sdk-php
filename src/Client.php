@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace APICrawlerDevSDKs;
 
 use APICrawlerDevSDKs\Core\BaseClient;
+use APICrawlerDevSDKs\Core\Implementation\StreamingHttpClient;
 use APICrawlerDevSDKs\Core\Util;
 use APICrawlerDevSDKs\Services\ExtractService;
 use Http\Discovery\Psr17FactoryDiscovery;
@@ -48,6 +49,11 @@ class Client extends BaseClient
             ),
             $requestOptions,
         );
+
+        if (is_null($options->streamingTransporter)) {
+            assert(!is_null($options->transporter));
+            $options->streamingTransporter = new StreamingHttpClient($options->transporter);
+        }
 
         /** @var array<string, string|null> $headers */
         $headers = [
