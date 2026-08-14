@@ -12,6 +12,7 @@ use APICrawlerDevSDKs\Core\Conversion\Contracts\ConverterSource;
 use APICrawlerDevSDKs\Core\Exceptions\APIConnectionException;
 use APICrawlerDevSDKs\Core\Exceptions\APIStatusException;
 use APICrawlerDevSDKs\Core\Implementation\RawResponse;
+use APICrawlerDevSDKs\Core\Implementation\StreamingHttpClient;
 use APICrawlerDevSDKs\RequestOptions;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
@@ -249,7 +250,13 @@ abstract class BaseClient
         $err = null;
 
         try {
-            $rsp = $transporter->sendRequest($req);
+            if ($transporter instanceof StreamingHttpClient) {
+                $rsp = $transporter->sendRequest($req, timeout: $opts->timeout);
+            } elseif (is_a($transporter, '\GuzzleHttp\Client')) {
+                $rsp = $transporter->send($req, ['timeout' => $opts->timeout]);
+            } else {
+                $rsp = $transporter->sendRequest($req);
+            }
         } catch (ClientExceptionInterface $e) {
             $err = $e;
         }
