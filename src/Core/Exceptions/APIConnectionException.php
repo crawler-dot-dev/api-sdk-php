@@ -1,9 +1,9 @@
 <?php
 
-namespace CrawlerDev\Core\Exceptions;
+namespace APICrawlerDevSDKs\Core\Exceptions;
 
 class APIConnectionException extends APIException
 {
     /** @var string */
-    protected const DESC = 'CrawlerDev API Connection Error';
+    protected const DESC = 'APICrawlerDevSDKs API Connection Error';
 }

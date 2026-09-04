@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace CrawlerDev\Core\Conversion\Contracts;
+namespace APICrawlerDevSDKs\Core\Conversion\Contracts;
 
-use CrawlerDev\Core\Conversion\CoerceState;
-use CrawlerDev\Core\Conversion\DumpState;
+use APICrawlerDevSDKs\Core\Conversion\CoerceState;
+use APICrawlerDevSDKs\Core\Conversion\DumpState;
 
 /**
  * @internal

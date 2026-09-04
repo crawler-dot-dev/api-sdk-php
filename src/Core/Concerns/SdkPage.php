@@ -2,20 +2,21 @@
 
 declare(strict_types=1);
 
-namespace CrawlerDev\Core\Concerns;
+namespace APICrawlerDevSDKs\Core\Concerns;
 
-use CrawlerDev\Client;
-use CrawlerDev\Core\Conversion\Contracts\Converter;
-use CrawlerDev\Core\Conversion\Contracts\ConverterSource;
-use CrawlerDev\Core\Exceptions\APIStatusException;
-use CrawlerDev\RequestOptions;
+use APICrawlerDevSDKs\Client;
+use APICrawlerDevSDKs\Core\Contracts\BaseResponse;
+use APICrawlerDevSDKs\Core\Conversion\Contracts\Converter;
+use APICrawlerDevSDKs\Core\Conversion\Contracts\ConverterSource;
+use APICrawlerDevSDKs\Core\Exceptions\APIStatusException;
+use APICrawlerDevSDKs\RequestOptions;
 
 /**
+ * @phpstan-import-type NormalizedRequest from \APICrawlerDevSDKs\Core\BaseClient
+ *
  * @internal
  *
  * @template Item
- *
- * @phpstan-import-type normalized_request from \CrawlerDev\Core\BaseClient
  */
 trait SdkPage
 {
@@ -24,25 +25,13 @@ trait SdkPage
     private Client $client;
 
     /**
-     * normalized_request $request.
-     */
-    private array $request;
-
-    private RequestOptions $options;
-
-    /**
      * @return list<Item>
      */
     abstract public function getItems(): array;
 
     public function hasNextPage(): bool
     {
-        $items = $this->getItems();
-        if (empty($items)) {
-            return false;
-        }
-
-        return null != $this->nextRequest();
+        return !is_null($this->nextRequest());
     }
 
     /**
@@ -65,8 +54,12 @@ trait SdkPage
 
         [$req, $opts] = $next;
 
-        // @phpstan-ignore-next-line
-        return $this->client->request(...$req, convert: $this->convert, page: $this::class, options: $opts);
+        // @phpstan-ignore-next-line argument.type
+        /** @var BaseResponse<static> */
+        $response = $this->client->request(...$req, convert: $this->convert, page: $this::class, options: $opts);
+
+        // @phpstan-ignore-next-line return.type
+        return $response->parse();
     }
 
     /**
@@ -103,16 +96,7 @@ trait SdkPage
     /**
      * @internal
      *
-     * @param array<string, mixed> $data
-     *
-     * @return static<Item>
-     */
-    abstract public static function fromArray(array $data): static;
-
-    /**
-     * @internal
-     *
-     * @return array{normalized_request, RequestOptions}
+     * @return array{NormalizedRequest, RequestOptions}
      */
     abstract protected function nextRequest(): ?array;
 }

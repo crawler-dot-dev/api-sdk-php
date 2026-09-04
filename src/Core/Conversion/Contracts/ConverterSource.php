@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CrawlerDev\Core\Conversion\Contracts;
+namespace APICrawlerDevSDKs\Core\Conversion\Contracts;
 
 /**
  * @internal

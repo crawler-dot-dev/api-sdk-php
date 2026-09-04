@@ -1,9 +1,9 @@
 <?php
 
-namespace CrawlerDev\Core\Exceptions;
+namespace APICrawlerDevSDKs\Core\Exceptions;
 
 class NotFoundException extends APIStatusException
 {
     /** @var string */
-    protected const DESC = 'CrawlerDev Not Found Exception';
+    protected const DESC = 'APICrawlerDevSDKs Not Found Exception';
 }

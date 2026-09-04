@@ -1,9 +1,9 @@
 <?php
 
-namespace CrawlerDev\Core\Exceptions;
+namespace APICrawlerDevSDKs\Core\Exceptions;
 
 class PermissionDeniedException extends APIStatusException
 {
     /** @var string */
-    protected const DESC = 'CrawlerDev Permission Denied Exception';
+    protected const DESC = 'APICrawlerDevSDKs Permission Denied Exception';
 }

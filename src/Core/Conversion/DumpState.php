@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CrawlerDev\Core\Conversion;
+namespace APICrawlerDevSDKs\Core\Conversion;
 
 /**
  * @internal
@@ -10,6 +10,11 @@ namespace CrawlerDev\Core\Conversion;
 final class DumpState
 {
     public function __construct(
+        public bool $translateNames = true,
+        public int $yes = 0,
+        public int $no = 0,
+        public int $maybe = 0,
+        public int $branched = 0,
         public bool $canRetry = true
     ) {}
 }
