@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CrawlerDev\Core\Contracts;
+namespace APICrawlerDevSDKs\Core\Contracts;
 
-use CrawlerDev\Core\Conversion\Contracts\ConverterSource;
+use APICrawlerDevSDKs\Core\Conversion\Contracts\ConverterSource;
 
 /**
  * @internal

@@ -1,9 +1,9 @@
 <?php
 
-namespace CrawlerDev\Core\Exceptions;
+namespace APICrawlerDevSDKs\Core\Exceptions;
 
 class AuthenticationException extends APIStatusException
 {
     /** @var string */
-    protected const DESC = 'CrawlerDev Authentication Exception';
+    protected const DESC = 'APICrawlerDevSDKs Authentication Exception';
 }

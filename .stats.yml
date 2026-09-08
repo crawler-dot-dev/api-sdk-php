@@ -1,4 +1,4 @@
 configured_endpoints: 2
-openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/crawler-dev%2Fcrawler.dev-a90d51810862173062e8919b7fb43c90806a2cd15b2bf35bc08beb65240409f0.yml
-openapi_spec_hash: c2dd18cc984b41adea7b4738c8abb9c4
-config_hash: 08bc981abf71222f31a04cf7dd16e062
+openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/crawler-dev/api.crawler.dev-sdks-9f1d5a2d3a2f01542ec599162d6b845a96ea222697ef9a5138d3b25d6445ec50.yml
+openapi_spec_hash: 1a7f5d634d012b3ea26b369dcfa6cc67
+config_hash: 322c6ad54348a3bf95151e7adaeaa403

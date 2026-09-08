@@ -3,11 +3,10 @@
   "license": "Apache-2.0",
   "autoload": {
     "files": [
-      "src/Core.php",
-      "src/Client.php"
+      "src/Version.php"
     ],
     "psr-4": {
-      "CrawlerDev\\": "src/"
+      "APICrawlerDevSDKs\\": "src/"
     }
   },
   "autoload-dev": {
@@ -27,8 +26,8 @@
     "preferred-install": "dist",
     "sort-packages": true
   },
-  "description": "Crawler Dev PHP SDK",
-  "name": "org-placeholder/crawler-dev",
+  "description": "API Crawler Dev SDKs PHP SDK",
+  "name": "org-placeholder/api-crawler-dev-sdks",
   "require": {
     "php": "^8.1",
     "php-http/discovery": "^1",
@@ -39,8 +38,10 @@
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^3",
+    "guzzlehttp/guzzle": "^7",
     "nyholm/psr7": "^1",
     "pestphp/pest": "^3",
+    "php-http/mock-client": "^1",
     "phpstan/extension-installer": "^1",
     "phpstan/phpstan": "^2",
     "phpstan/phpstan-phpunit": "^2",

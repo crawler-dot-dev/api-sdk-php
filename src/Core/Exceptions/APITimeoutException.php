@@ -1,16 +1,16 @@
 <?php
 
-namespace CrawlerDev\Core\Exceptions;
+namespace APICrawlerDevSDKs\Core\Exceptions;
 
 use Psr\Http\Message\RequestInterface;
 
 class APITimeoutException extends APIConnectionException
 {
     /** @var string */
-    protected const DESC = 'CrawlerDev API Timeout Exception';
+    protected const DESC = 'APICrawlerDevSDKs API Timeout Exception';
 
     public function __construct(
-        public RequestInterface $request,
+        RequestInterface $request,
         ?\Throwable $previous = null,
         string $message = 'Request timed out.',
     ) {

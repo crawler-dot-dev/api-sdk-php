@@ -1,11 +1,11 @@
 <?php
 
-namespace CrawlerDev\Core\Exceptions;
+namespace APICrawlerDevSDKs\Core\Exceptions;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class APIException extends CrawlerDevException
+class APIException extends APICrawlerDevSDKsException
 {
     public ?int $status = null;
 

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace CrawlerDev\Core\Concerns;
+namespace APICrawlerDevSDKs\Core\Concerns;
 
-use CrawlerDev\Core\Contracts\BaseModel;
-use CrawlerDev\Core\Conversion;
-use CrawlerDev\Core\Conversion\CoerceState;
-use CrawlerDev\Core\Conversion\Contracts\Converter;
-use CrawlerDev\Core\Conversion\ModelOf;
-use CrawlerDev\Core\Util;
+use APICrawlerDevSDKs\Core\Contracts\BaseModel;
+use APICrawlerDevSDKs\Core\Conversion;
+use APICrawlerDevSDKs\Core\Conversion\CoerceState;
+use APICrawlerDevSDKs\Core\Conversion\Contracts\Converter;
+use APICrawlerDevSDKs\Core\Conversion\ModelOf;
+use APICrawlerDevSDKs\Core\Util;
 
 /**
  * @internal
@@ -32,7 +32,7 @@ trait SdkModel
      */
     public function __serialize(): array
     {
-        $properties = $this->toProperties(); // @phpstan-ignore-line
+        $properties = $this->toProperties();
 
         return array_map(static fn ($v) => self::serialize($v), array: $properties);
     }
@@ -45,7 +45,8 @@ trait SdkModel
     public function __unserialize(array $data): void
     {
         foreach ($data as $key => $value) {
-            $this->offsetSet($key, value: $value); // @phpstan-ignore-line
+            // @phpstan-ignore-next-line argument.type
+            $this->offsetSet($key, value: $value);
         }
     }
 
@@ -74,8 +75,6 @@ trait SdkModel
      * a native class property, indicating an omitted value,
      * or a property overridden with an incongruent type
      *
-     * @return value-of<Shape>
-     *
      * @throws \Exception
      */
     public function __get(string $key): mixed
@@ -94,7 +93,28 @@ trait SdkModel
 
         // An optional property which was unset to be omitted from serialized is being accessed.
         // Return null to match user's expectations.
-        return null; // @phpstan-ignore-line
+        // @phpstan-ignore-next-line return.type
+        return null;
+    }
+
+    /**
+     * @internal
+     *
+     * Like {@link __unserialize()}, but for raw API payloads, whose keys are
+     * API property names rather than PHP property names
+     *
+     * @param array<string, mixed> $data
+     */
+    public function unserializeFromApiPayload(array $data): void
+    {
+        foreach (self::$converter->properties as $name => $info) {
+            if ($name !== $info->apiName && array_key_exists($info->apiName, array: $data)) {
+                $data[$name] = $data[$info->apiName];
+                unset($data[$info->apiName]);
+            }
+        }
+
+        $this->__unserialize($data);
     }
 
     /**
@@ -104,7 +124,8 @@ trait SdkModel
      */
     public function toProperties(): array
     {
-        return [...Util::get_object_vars($this), ...$this->_data]; // @phpstan-ignore-line
+        // @phpstan-ignore-next-line return.type
+        return [...Util::get_object_vars($this), ...$this->_data];
     }
 
     /**
@@ -114,7 +135,8 @@ trait SdkModel
      */
     public function offsetExists(mixed $offset): bool
     {
-        if (!is_string($offset)) { // @phpstan-ignore-line
+        // @phpstan-ignore-next-line function.alreadyNarrowedType
+        if (!is_string($offset)) {
             throw new \InvalidArgumentException;
         }
 
@@ -142,19 +164,24 @@ trait SdkModel
      */
     public function &offsetGet(mixed $offset): mixed
     {
-        if (!is_string($offset)) { // @phpstan-ignore-line
+        // @phpstan-ignore-next-line function.alreadyNarrowedType
+        if (!is_string($offset)) {
             throw new \InvalidArgumentException;
         }
 
-        if (!$this->offsetExists($offset)) { // @phpstan-ignore-line
-            return null; // @phpstan-ignore-line
+        // @phpstan-ignore-next-line function.alreadyNarrowedType
+        if (!$this->offsetExists($offset)) {
+            // @phpstan-ignore-next-line return.type
+            return null;
         }
 
         if (array_key_exists($offset, array: $this->_data)) {
-            return $this->_data[$offset]; // @phpstan-ignore-line
+            // @phpstan-ignore-next-line return.type
+            return $this->_data[$offset];
         }
 
-        return $this->{$offset}; // @phpstan-ignore-line
+        // @phpstan-ignore-next-line return.type
+        return $this->{$offset};
     }
 
     /**
@@ -164,7 +191,8 @@ trait SdkModel
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        if (!is_string($offset)) { // @phpstan-ignore-line
+        // @phpstan-ignore-next-line function.alreadyNarrowedType
+        if (!is_string($offset)) {
             throw new \InvalidArgumentException;
         }
 
@@ -174,13 +202,16 @@ trait SdkModel
 
         $coerced = Conversion::coerce($type, value: $value, state: new CoerceState(translateNames: false));
 
-        if (property_exists($this, property: $offset)) { // @phpstan-ignore-line
+        // @phpstan-ignore-next-line function.alreadyNarrowedType
+        if (property_exists($this, property: $offset)) {
             try {
-                $this->{$offset} = $coerced; // @phpstan-ignore-line
+                // @phpstan-ignore-next-line assign.propertyType
+                $this->{$offset} = $coerced;
                 unset($this->_data[$offset]);
 
                 return;
-            } catch (\TypeError) { // @phpstan-ignore-line
+                // @phpstan-ignore-next-line catch.neverThrown
+            } catch (\TypeError) {
                 unset($this->{$offset});
             }
         }
@@ -195,11 +226,13 @@ trait SdkModel
      */
     public function offsetUnset(mixed $offset): void
     {
-        if (!is_string($offset)) { // @phpstan-ignore-line
+        // @phpstan-ignore-next-line function.alreadyNarrowedType
+        if (!is_string($offset)) {
             throw new \InvalidArgumentException;
         }
 
-        if (property_exists($this, property: $offset)) { // @phpstan-ignore-line
+        // @phpstan-ignore-next-line function.alreadyNarrowedType
+        if (property_exists($this, property: $offset)) {
             unset($this->{$offset});
         }
 
@@ -213,7 +246,7 @@ trait SdkModel
      */
     public function jsonSerialize(): array
     {
-        // @phpstan-ignore-next-line
+        // @phpstan-ignore-next-line argument.type
         return Conversion::dump(self::converter(), value: $this->__serialize());
     }
 
@@ -222,7 +255,8 @@ trait SdkModel
      */
     public static function fromArray(array $data): static
     {
-        return self::converter()->from($data); // @phpstan-ignore-line
+        // @phpstan-ignore-next-line argument.type
+        return self::converter()->from($data);
     }
 
     /**

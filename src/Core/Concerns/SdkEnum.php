@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace CrawlerDev\Core\Concerns;
+namespace APICrawlerDevSDKs\Core\Concerns;
 
-use CrawlerDev\Core\Conversion\Contracts\Converter;
-use CrawlerDev\Core\Conversion\EnumOf;
+use APICrawlerDevSDKs\Core\Conversion\Contracts\Converter;
+use APICrawlerDevSDKs\Core\Conversion\EnumOf;
 
 /**
  * @internal
@@ -28,6 +28,7 @@ trait SdkEnum
             }
         }
 
-        return static::$converter = new EnumOf($acc); // @phpstan-ignore-line
+        // @phpstan-ignore-next-line return.type
+        return static::$converter = new EnumOf($acc);
     }
 }

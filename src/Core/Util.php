@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CrawlerDev\Core;
+namespace APICrawlerDevSDKs\Core;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -25,21 +25,66 @@ final class Util
 
     public const JSONL_CONTENT_TYPE = '/^application\/(:?x-(?:n|l)djson)|(:?(?:x-)?jsonl)/';
 
-    /**
-     * @return array<string, mixed>
-     */
-    public static function get_object_vars(object $object1): array
+    public const STREAMING_CONTENT_TYPE = ['/^text\/event-stream/', self::JSONL_CONTENT_TYPE];
+
+    public static function getenv(string $key): ?string
     {
-        return get_object_vars($object1);
+        if (array_key_exists($key, array: $_ENV)) {
+            if (!is_string($value = $_ENV[$key])) {
+                throw new \InvalidArgumentException;
+            }
+
+            return $value;
+        }
+
+        if (is_string($value = getenv($key))) {
+            return $value;
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    public static function get_object_vars(object $object): array
+    {
+        return get_object_vars($object);
+    }
+
+    public static function machtype(): string
+    {
+        $arch = php_uname('m');
+
+        return match (true) {
+            str_contains($arch, 'aarch64'), str_contains($arch, 'arm64') => 'arm64',
+            str_contains($arch, 'x86_64'), str_contains($arch, 'amd64') => 'x64',
+            str_contains($arch, 'i386'), str_contains($arch, 'i686') => 'x32',
+            str_contains($arch, 'arm') => 'arm',
+            default => 'unknown',
+        };
+    }
+
+    public static function ostype(): string
+    {
+        return match ($os = strtolower(PHP_OS_FAMILY)) {
+            'linux' => 'Linux',
+            'darwin' => 'MacOS',
+            'windows' => 'Windows',
+            'solaris' => 'Solaris',
+            // @phpstan-ignore-next-line match.alwaysFalse
+            'bsd', 'freebsd', 'openbsd' => 'BSD',
+            default => "Other:{$os}",
+        };
     }
 
     /**
      * @template T
      *
-     * @param array<string, T> $array
-     * @param array<string, string> $map
+     * @param array<string,T> $array
+     * @param array<string,string> $map
      *
-     * @return array<string, T>
+     * @return array<string,T>
      */
     public static function array_transform_keys(array $array, array $map): array
     {
@@ -51,14 +96,41 @@ final class Util
         return $acc;
     }
 
-    /**
-     * @param array<string, mixed> $arr
-     *
-     * @return array<string, mixed>
-     */
-    public static function array_filter_omit(array $arr): array
+    public static function strVal(mixed $value): string
     {
-        return array_filter($arr, fn ($v, $_) => OMIT !== $v, mode: ARRAY_FILTER_USE_BOTH);
+        if (is_bool($value)) {
+            return $value ? 'true' : 'false';
+        }
+
+        if (is_object($value) && is_a($value, class: \DateTimeInterface::class)) {
+            return date_format($value, format: \DateTimeInterface::RFC3339);
+        }
+
+        // @phpstan-ignore-next-line argument.type
+        return strval($value);
+    }
+
+    /**
+     * @param callable $callback
+     */
+    public static function mapRecursive(mixed $callback, mixed $value): mixed
+    {
+        $mapped = match (true) {
+            is_array($value) => array_map(static fn ($v) => self::mapRecursive($callback, value: $v), $value),
+            default => $value,
+        };
+
+        return $callback($mapped);
+    }
+
+    public static function removeNulls(mixed $value): mixed
+    {
+        $mapped = self::mapRecursive(
+            static fn ($vs) => is_array($vs) && !array_is_list($vs) ? array_filter($vs, callback: static fn ($v) => !is_null($v)) : $vs,
+            value: $value
+        );
+
+        return $mapped;
     }
 
     /**
@@ -101,12 +173,13 @@ final class Util
         }
 
         [$template] = $path;
+        $mapped = array_map(static fn ($s) => rawurlencode(self::strVal($s)), array: array_slice($path, 1));
 
-        return sprintf($template, ...array_map('rawurlencode', array: array_slice($path, 1)));
+        return sprintf($template, ...$mapped);
     }
 
     /**
-     * @param array<string, mixed> $query
+     * @param array<string,mixed> $query
      */
     public static function joinUri(
         UriInterface $base,
@@ -134,14 +207,30 @@ final class Util
         parse_str($base->getQuery(), $q1);
         parse_str($parsed['query'] ?? '', $q2);
 
-        $merged_query = array_merge_recursive($q1, $q2, $query);
-        $qs = http_build_query($merged_query, encoding_type: PHP_QUERY_RFC3986);
+        $mergedQuery = [...$q1, ...$q2, ...$query];
+
+        /** @var array<string,mixed> */
+        $normalizedQuery = self::mapRecursive(
+            static fn ($v) => is_bool($v) || is_numeric($v) ? self::strVal($v) : $v,
+            value: $mergedQuery
+        );
+        $qs = http_build_query($normalizedQuery, encoding_type: PHP_QUERY_RFC3986);
 
         return $base->withQuery($qs);
     }
 
+    public static function isStreamingRequest(RequestInterface $request): bool
+    {
+        $accept = $request->getHeaderLine('Accept');
+
+        return !empty(array_filter(
+            self::STREAMING_CONTENT_TYPE,
+            static fn (string $pattern) => (bool) preg_match($pattern, subject: $accept),
+        ));
+    }
+
     /**
-     * @param array<string, string|int|list<string|int>|null> $headers
+     * @param array<string,string|int|list<string|int>|null> $headers
      */
     public static function withSetHeaders(
         RequestInterface $req,
@@ -149,13 +238,12 @@ final class Util
     ): RequestInterface {
         foreach ($headers as $name => $value) {
             if (is_null($value)) {
+                /** @var RequestInterface */
                 $req = $req->withoutHeader($name);
             } else {
-                $value = is_int($value)
-                            ? (string) $value
-                            : (is_array($value)
-                            ? array_map(static fn ($v) => (string) $v, array: $value)
-                            : $value);
+                $value = is_array($value) ? array_map(static fn ($v) => self::strVal($v), array: $value) : self::strVal($value);
+
+                /** @var RequestInterface */
                 $req = $req->withHeader($name, $value);
             }
         }
@@ -182,8 +270,7 @@ final class Util
     }
 
     /**
-     * @param bool|int|float|string|resource|\Traversable<mixed>|array<string,
-     * mixed,>|null $body
+     * @param bool|int|float|string|resource|\Traversable<mixed,>|array<string,mixed>|null $body
      */
     public static function withSetBody(
         StreamFactoryInterface $factory,
@@ -191,6 +278,7 @@ final class Util
         mixed $body
     ): RequestInterface {
         if ($body instanceof StreamInterface) {
+            /** @var RequestInterface */
             return $req->withBody($body);
         }
 
@@ -200,21 +288,31 @@ final class Util
                 $encoded = json_encode($body, flags: self::JSON_ENCODE_FLAGS);
                 $stream = $factory->createStream($encoded);
 
+                /** @var RequestInterface */
                 return $req->withBody($stream);
             }
         }
 
         if (preg_match('/^multipart\/form-data/', $contentType)) {
             [$boundary, $gen] = self::encodeMultipartStreaming($body);
-            $encoded = implode('', iterator_to_array($gen));
+            $encoded = implode('', iterator_to_array($gen, preserve_keys: false));
             $stream = $factory->createStream($encoded);
 
+            /** @var RequestInterface */
             return $req->withHeader('Content-Type', "{$contentType}; boundary={$boundary}")->withBody($stream);
         }
 
         if (is_resource($body)) {
             $stream = $factory->createStreamFromResource($body);
 
+            /** @var RequestInterface */
+            return $req->withBody($stream);
+        }
+
+        if (is_string($body)) {
+            $stream = $factory->createStream($body);
+
+            // @var RequestInterface
             return $req->withBody($stream);
         }
 
@@ -361,17 +459,24 @@ final class Util
     ): \Generator {
         $contentLine = "Content-Type: %s\r\n\r\n";
 
-        if (is_resource($val)) {
-            yield sprintf($contentLine, $contentType ?? 'application/octet-stream');
-            while (!feof($val)) {
-                if ($read = fread($val, length: self::BUF_SIZE)) {
-                    yield $read;
+        if ($val instanceof FileParam) {
+            $ct = $val->contentType ?? $contentType;
+
+            yield sprintf($contentLine, $ct);
+            $data = $val->data;
+            if (is_string($data)) {
+                yield $data;
+            } else { // resource
+                while (!feof($data)) {
+                    if ($read = fread($data, length: self::BUF_SIZE)) {
+                        yield $read;
+                    }
                 }
             }
         } elseif (is_string($val) || is_numeric($val) || is_bool($val)) {
             yield sprintf($contentLine, $contentType ?? 'text/plain');
 
-            yield (string) $val;
+            yield self::strVal($val);
         } else {
             yield sprintf($contentLine, $contentType ?? 'application/json');
 
@@ -397,9 +502,18 @@ final class Util
         yield 'Content-Disposition: form-data';
 
         if (!is_null($key)) {
-            $name = rawurlencode($key);
+            $name = str_replace(['"', "\r", "\n"], replace: '', subject: $key);
 
             yield "; name=\"{$name}\"";
+        }
+
+        // File uploads require a filename in the Content-Disposition header,
+        // e.g. `Content-Disposition: form-data; name="file"; filename="data.csv"`
+        // Without this, many servers will reject the upload with a 400.
+        if ($val instanceof FileParam) {
+            $filename = str_replace(['"', "\r", "\n"], replace: '', subject: $val->filename);
+
+            yield "; filename=\"{$filename}\"";
         }
 
         yield "\r\n";
@@ -409,8 +523,29 @@ final class Util
     }
 
     /**
-     * @param bool|int|float|string|resource|\Traversable<mixed>|array<string,
-     * mixed,>|null $body
+     * Expands list arrays into separate multipart parts, applying the configured array key format.
+     *
+     * @param list<callable> $closing
+     *
+     * @return \Generator<string>
+     */
+    private static function writeMultipartField(
+        string $boundary,
+        ?string $key,
+        mixed $val,
+        array &$closing
+    ): \Generator {
+        if (is_array($val) && array_is_list($val)) {
+            foreach ($val as $item) {
+                yield from self::writeMultipartField(boundary: $boundary, key: $key, val: $item, closing: $closing);
+            }
+        } else {
+            yield from self::writeMultipartChunk(boundary: $boundary, key: $key, val: $val, closing: $closing);
+        }
+    }
+
+    /**
+     * @param bool|int|float|string|resource|\Traversable<mixed,>|array<string,mixed>|null $body
      *
      * @return array{string, \Generator<string>}
      */
@@ -423,14 +558,10 @@ final class Util
             try {
                 if (is_array($body) || is_object($body)) {
                     foreach ((array) $body as $key => $val) {
-                        foreach (static::writeMultipartChunk(boundary: $boundary, key: $key, val: $val, closing: $closing) as $chunk) {
-                            yield $chunk;
-                        }
+                        yield from static::writeMultipartField(boundary: $boundary, key: $key, val: $val, closing: $closing);
                     }
                 } else {
-                    foreach (static::writeMultipartChunk(boundary: $boundary, key: null, val: $body, closing: $closing) as $chunk) {
-                        yield $chunk;
-                    }
+                    yield from static::writeMultipartField(boundary: $boundary, key: null, val: $body, closing: $closing);
                 }
 
                 yield "--{$boundary}--\r\n";
